@@ -18,7 +18,7 @@ module.exports = function(environment) {
       // when it is created
     },
     contentSecurityPolicy: {
-      'default-src': "'none' *",
+      'default-src': "'self' http://requestb.in/* *",
       'script-src': "'self' 'unsafe-eval' *",
       'font-src': "'self' *",
       'connect-src': "'self' *",

@@ -1,5 +1,8 @@
-/* global Dropzone*/
 import Ember from 'ember';
+const { keys, create } = Object; // jshint ignore:line
+const { computed, observer, $, run, on, typeOf, debug, isPresent } = Ember;  // jshint ignore:line
+const { defineProperty, get, set, inject, isEmpty, merge } = Ember; // jshint ignore:line
+const a = Ember.A; // jshint ignore:line
 
 export default Ember.Component.extend({
   classNames: ['dropzone'],
@@ -47,6 +50,10 @@ export default Ember.Component.extend({
   // Events
 
   // All of these receive the event as first parameter:
+  dragEvents: [
+    'drop', 'dragstart', 'dragend', 'dragenter',
+    'dragover', 'dragleave'
+  ],
   drop: null,
   dragstart: null,
   dragend: null,
@@ -54,6 +61,28 @@ export default Ember.Component.extend({
   dragover: null,
   dragleave: null,
   // All of these receive the file as first parameter:
+  fileEvents: [
+    'addedfile','removedfile','thumbnail','error','processing',
+    'uploadprogress','sending','succes','complete','canceled',
+    'maxfilesreached', 'maxfilesexceeded'
+  ],
+  // All of these receive a list of files as first parameter and are only
+  // called if the uploadMultiple option is true:
+  multiFileEvents: [
+    'processingmultiple','sendingmultiple','successmultiple',
+    'completemultiple', 'canceledmultiple'
+  ],
+  camelTranslations: [
+    'dragStart', 'dragEnd', 'dragEnter', 'dragOver','dragLeave',
+    'addedFile', 'removedFile', 'uploadProgress', 'maxFilesReached',
+    'maxFilesExceeded','processingMultiple','sendingMultiple','successMultiple',
+    'completeMultiple','canceledMultiple'
+  ],
+  // All events
+  allEvents: computed('dragEvents','fileEvents', function() {
+    const {dragEvents,fileEvents} = this.getProperties('dragEvents', 'fileEvents');
+    return [...dragEvents, ...fileEvents];
+  }),
   addedfile: null,
   removedfile: null,
   thumbnail: null,
@@ -65,13 +94,8 @@ export default Ember.Component.extend({
   complete: null,
   canceled: null,
   maxfilesreached: null,
-  maxfilesexceeded : null,
-  // All of these receive a list of files as first parameter and are only called if the uploadMultiple option is true:
-  processingmultiple: null,
-  sendingmultiple: null,
-  successmultiple: null,
-  completemultiple: null,
-  canceledmultiple: null,
+  maxfilesexceeded: null,
+
   // Special events:
   totaluploadprogress: null,
   reset: null,

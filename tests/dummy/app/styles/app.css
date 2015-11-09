@@ -1,1 +1,16 @@
-@import @import "dropzone";
+@import "dropzone.scss";
+
+.bin {
+  font-size: 14px;
+  color: darkgrey;
+  font-family: monospace;
+}
+.url {
+  color: black;
+}
+
+#inspector-window {
+  margin: 0 15px 0 15px;
+  width:70%;
+  height:300px;
+}
