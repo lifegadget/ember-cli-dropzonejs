@@ -3,288 +3,153 @@ const { keys, create } = Object; // jshint ignore:line
 const { computed, observer, $, run, on, typeOf, debug, isPresent } = Ember;  // jshint ignore:line
 const { defineProperty, get, set, inject, isEmpty, merge } = Ember; // jshint ignore:line
 const a = Ember.A; // jshint ignore:line
+const pascalize = thingy => thingy ? Ember.String.capitalize(Ember.String.camelize(thingy)) : thingy;
+const camelizedTranslation = name => {
+  // For consistency sake, allows all parameters to be camelcase in Ember
+  const translated = [
+    'dragStart', 'dragEnd', 'dragEnter', 'dragOver','dragLeave',
+    'addedFile', 'removedFile', 'uploadProgress', 'maxFilesReached',
+    'maxFilesExceeded','processingMultiple','sendingMultiple','successMultiple',
+    'completeMultiple','canceledMultiple','totalUploadProgress','queueComplete'
+  ];
+  const dictionary = translated.map(item => {
+    return {[ item.toLowerCase() ]: item};
+  });
+
+  return a(keys(dictionary)).contains(name) ? dictionary[name] : name;
+};
+
+// Configuration Objects
+// > http://www.dropzonejs.com/#configuration
+const configurationOptions = [
+  'url', 'withCredentials', 'method', 'parallelUploads', 'maxFilesize', 'filesizeBase',
+  'paramName', 'uploadMultiple', 'uploadMultiple', 'headers', 'addRemoveLinks', 'previewsContainer',
+  'clickable', 'createImageThumbnails', 'maxThumbnailFilesize', 'thumbnailWidth', 'thumbnailHeight',
+  'maxFiles', 'acceptedFiles', 'autoProcessQueue', 'forceFallback', 'previewTemplate'
+];
+const optionalCallbacks = [
+  'init', 'accept', 'resize', 'fallback'
+];
+// Dropzone translations
+// aka, text/html that shows up in various states
+const translations = [
+  'dictDefaultMessage', 'dictFallbackMessage', 'dictFallbackText', 'dictInvalidFileType',
+  'dictFileTooBig', 'dictResponseError', 'dictCancelUpload', 'dictCancelUploadConfirmation',
+  'dictRemoveFile', 'dictMaxFilesExceeded'
+];
+// All Configuration
+const allConfiguration = [...configurationOptions, ...optionalCallbacks, ...translations];
+// Events
+// All of these receive the event as first parameter:
+const dragEvents = [
+  'drop', 'dragstart', 'dragend', 'dragenter',
+  'dragover', 'dragleave'
+];
+// All of these receive the file as first parameter:
+const fileEvents = [
+  'addedfile','removedfile','thumbnail','error','processing',
+  'uploadprogress','sending','succes','complete','canceled',
+  'maxfilesreached', 'maxfilesexceeded'
+];
+// All of these receive a list of files as first parameter and are only
+// called if the uploadMultiple option is true:
+const multiFileEvents = [
+  'processingmultiple','sendingmultiple','successmultiple',
+  'completemultiple', 'canceledmultiple'
+];
+// Special Events
+// note: note sure yet what "special" means
+const specialEvents = [
+  'totaluploadprogress', 'reset', 'queuecomplete'
+];
+// All events
+const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents];
 
 export default Ember.Component.extend({
   classNames: ['dropzone'],
 
-  myDropzone:undefined,
+  // Default values
+  url: '#', // note: this can be a function too
+  autoProcessQueue: false,
 
-  element: null,
-
-  dropzoneOptions: null,
-
-  url: '#',
-  withCredentials: null,
-  method: null,
-  parallelUploads: null,
-  maxFilesize: null,
-  filesizeBase: null,
-  paramName: null,
-  uploadMultiple: null,
-  headers: null,
-  addRemoveLinks: null,
-  previewsContainer: null,
-  clickable: null,
-  maxThumbnailsize: null,
-  thumbnailWidth: null,
-  thumbnailHeight: null,
-  maxFiles: null,
-  // resize
-  acceptedFiles: null,
-  autoProcessQueue: null,
-  forceFallback: null,
-  previewTemplate: null,
-
-  // Dropzone translations
-  dictDefaultMessage: null,
-  dictFallbackMessage: null,
-  dictFallbackText: null,
-  dictInvalidFileType: null,
-  dictFileTooBig: null,
-  dictResponseError: null,
-  dictCancelUpload: null,
-  dictCancelUploadConfirmation: null,
-  dictRemoveFile: null,
-  dictMaxFilesExceeded: null,
-
-  // Events
-
-  // All of these receive the event as first parameter:
-  dragEvents: [
-    'drop', 'dragstart', 'dragend', 'dragenter',
-    'dragover', 'dragleave'
-  ],
-  drop: null,
-  dragstart: null,
-  dragend: null,
-  dragenter: null,
-  dragover: null,
-  dragleave: null,
-  // All of these receive the file as first parameter:
-  fileEvents: [
-    'addedfile','removedfile','thumbnail','error','processing',
-    'uploadprogress','sending','succes','complete','canceled',
-    'maxfilesreached', 'maxfilesexceeded'
-  ],
-  // All of these receive a list of files as first parameter and are only
-  // called if the uploadMultiple option is true:
-  multiFileEvents: [
-    'processingmultiple','sendingmultiple','successmultiple',
-    'completemultiple', 'canceledmultiple'
-  ],
-  camelTranslations: [
-    'dragStart', 'dragEnd', 'dragEnter', 'dragOver','dragLeave',
-    'addedFile', 'removedFile', 'uploadProgress', 'maxFilesReached',
-    'maxFilesExceeded','processingMultiple','sendingMultiple','successMultiple',
-    'completeMultiple','canceledMultiple'
-  ],
-  // All events
-  allEvents: computed('dragEvents','fileEvents', function() {
-    const {dragEvents,fileEvents} = this.getProperties('dragEvents', 'fileEvents');
-    return [...dragEvents, ...fileEvents];
-  }),
-  addedfile: null,
-  removedfile: null,
-  thumbnail: null,
-  error: null,
-  processing: null,
-  uploadprogress: null,
-  sending: null,
-  success: null,
-  complete: null,
-  canceled: null,
-  maxfilesreached: null,
-  maxfilesexceeded: null,
-
-  // Special events:
-  totaluploadprogress: null,
-  reset: null,
-  queuecomplete: null,
-  files: null,
-
-  // Callback functions
-  accept: null,
-
-  getDropzoneOptions(){
+  getDropzoneOptions() {
     let dropzoneOptions = {};
-    let dropzoneKeys = [
-      "url",
-      "method",
-      "parallelUploads",
-      "maxFilesize",
-      "filesizeBase",
-      "paramName",
-      "uploadMultiple",
-      "headers",
-      "addRemoveLinks",
-      "previewsContainer",
-      "clickable",
-      "maxThumbnailsize",
-      "thumbnailWidth",
-      "thumbnailHeight",
-      "maxFiles",
-      "acceptedFiles",
-      "autoProcessQueue",
-      "forceFallback",
-      "previewTemplate",
-      "dictDefaultMessage",
-      "dictFallbackMessage",
-      "dictFallbackText",
-      "dictInvalidFileType",
-      "dictFileTooBig",
-      "dictResponseError",
-      "dictCancelUpload",
-      "dictCancelUploadConfirmation",
-      "dictRemoveFile",
-      "dictMaxFilesExceeded",
-      "drop",
-      "dragstart",
-      "dragend",
-      "dragenter",
-      "dragover",
-      "dragleave",
-      "addedfile",
-      "removedfile",
-      "thumbnail",
-      "error",
-      "processing",
-      "uploadprogress",
-      "sending",
-      "success",
-      "complete",
-      "canceled",
-      "maxfilesreached",
-      "maxfilesexceeded",
-      "processingmultiple",
-      "sendingmultiple",
-      "successmultiple",
-      "completemultiple",
-      "canceledmultiple",
-      "totaluploadprogress",
-      "reset",
-      "queuecomplete",
-      "withCredentials",
-      "accept"
-    ];
-    let dropzoneProperties = [
-      this.url,
-      this.method,
-      this.parallelUploads,
-      this.maxFilesize,
-      this.filesizeBase,
-      this.paramName,
-      this.uploadMultiple,
-      this.headers,
-      this.addRemoveLinks,
-      this.previewsContainer,
-      this.clickable,
-      this.maxThumbnailsize,
-      this.thumbnailWidth,
-      this.thumbnailHeight,
-      this.maxFiles,
-      // resize
-      this.acceptedFiles,
-      this.autoProcessQueue,
-      this.forceFallback,
-      this.previewTemplate,
-
-      // Dropzone translations
-      this.dictDefaultMessage,
-      this.dictFallbackMessage,
-      this.dictFallbackText,
-      this.dictInvalidFileType,
-      this.dictFileTooBig,
-      this.dictResponseError,
-      this.dictCancelUpload,
-      this.dictCancelUploadConfirmation,
-      this.dictRemoveFile,
-      this.dictMaxFilesExceeded,
-
-      // Events
-
-      // All of these receive the event as first parameter:
-      this.drop,
-      this.dragstart,
-      this.dragend,
-      this.dragenter,
-      this.dragover,
-      this.dragleave,
-      // All of these receive the file as first parameter:
-      this.addedfile,
-      this.removedfile,
-      this.thumbnail,
-      this.error,
-      this.processing,
-      this.uploadprogress,
-      this.sending,
-      this.success,
-      this.complete,
-      this.canceled,
-      this.maxfilesreached,
-      this.maxfilesexceeded,
-      // All of these receive a list of files as first parameter and are only called if the uploadMultiple option is true:
-      this.processingmultiple,
-      this.sendingmultiple,
-      this.successmultiple,
-      this.completemultiple,
-      this.canceledmultiple,
-      //Special events:
-      this.totaluploadprogress,
-      this.reset,
-      this.queuecomplete,
-      this.withCredentials,
-      this.accept
-    ];
-
-    for( let i=0; i < dropzoneProperties.length; i++ ){
-      if (dropzoneProperties[i] !== null){
-        dropzoneOptions[dropzoneKeys[i]] = dropzoneProperties[i];
-      } else if (dropzoneKeys[i] === this.thumbnailHeight || dropzoneKeys[i] === this.thumbnailWidth) {
-        dropzoneOptions[dropzoneKeys[i]] = dropzoneProperties[i];
+    // add configuration
+    a(allConfiguration).forEach(option => {
+      const prop = this.get(option);
+      if(isPresent(prop)) {
+        dropzoneOptions[option] = prop;
       }
-    }
-    this.set('dropzoneOptions', dropzoneOptions);
+    });
+    // Event Overrides
+    // note: usually better to use the "additive" listening events rather than overriding
+    // the exception to this rule is the "special events" from above which are intended to be provided
+    // by the caller
+    a(allEvents).forEach(event => {
+      const prop = this.get(event) || this.get(camelizedTranslation(event));
+      if(isPresent(prop)) {
+        if(typeOf(prop) === 'function') {
+          dropzoneOptions[event] = Ember.$.proxy(prop, this); // allow event to access Ember context
+        } else {
+          debug(`Event "${event}" was configured but was not a function, ignoreing.`);
+        }
+      }
+    });
+
+    return dropzoneOptions;
+  },
+  getDropzone() {
+    return this.$().dropzone;
+  },
+  // check for non-camelized name first but then check camelized with 'on' prefix
+  getHandler(event) {
+    const dropzoneEvent = this.get('event');
+    const emberEvent = this.get(`on${pascalize(camelizedTranslation(event))}`);
+    if (typeOf(dropzoneEvent) === 'function') { return dropzoneEvent; }
+    if (typeOf(emberEvent) === 'function') { return emberEvent; }
+    else { return null; }
   },
 
-  createDropzone(element){
-    this.set('myDropzone', new Dropzone(element, this.dropzoneOptions));
-  },
+  insertDropzone: on('didInsertElement', function() {
+    window.Dropzone.autoDiscover = false;
+    const {allEvents} = this.getProperties('allEvents');
 
-  insertDropzone: Ember.on('didInsertElement', function(){
-    let self = this;
-    this.getDropzoneOptions();
-    Dropzone.autoDiscover = false;
-    this.createDropzone(this.element);
-
-    if ( this.files && this.files.length > 0 ) {
-
-      this.files.map( function( file ) {
-
-        let dropfile = {
-          name: file.get('name'),
-          type: file.get('type'),
-          size: file.get('size'),
-          status: Dropzone.ADDED
-        };
-        let thumbnail = file.get('thumbnail');
-
-        if ( typeof(thumbnail) === 'string' ) {
-
-          dropfile.thumbnail = thumbnail;
-        }
-
-        self.myDropzone.emit('addedfile', dropfile);
-
-        if ( typeof(thumbnail) === 'string' ) {
-
-          self.myDropzone.emit('thumbnail', dropfile, thumbnail);
-        }
-
-        self.myDropzone.emit('complete', dropfile);
-        self.myDropzone.files.push(file);
+    run.schedule('afterRender', () => {
+      // Create dropzone object
+      // let dropzone = new window.Dropzone(`#${get(this,'elementId')}`, this.getDropzoneOptions()));
+      let dropzone = this.$().dropzone(this.getDropzoneOptions());
+      // Setup event listeners
+      a(allEvents).forEach(event => {
+        const handler = this.getHandler(event);
+        dropzone.on(event, $.proxy(handler,this));
       });
-    }
+    });
 
-    return this.myDropzone;
+    // if ( this.files && this.files.length > 0 ) {
+    //   this.files.map( function( file ) {
+    //     let dropfile = {
+    //       name: file.get('name'),
+    //       type: file.get('type'),
+    //       size: file.get('size'),
+    //       status: Dropzone.ADDED
+    //     };
+    //     let thumbnail = file.get('thumbnail');
+    //
+    //     if ( typeof(thumbnail) === 'string' ) {
+    //
+    //       dropfile.thumbnail = thumbnail;
+    //     }
+    //
+    //     self.myDropzone.emit('addedfile', dropfile);
+    //
+    //     if ( typeof(thumbnail) === 'string' ) {
+    //
+    //       self.myDropzone.emit('thumbnail', dropfile, thumbnail);
+    //     }
+    //
+    //     self.myDropzone.emit('complete', dropfile);
+    //     self.myDropzone.files.push(file);
+    //   });
+    // }
   })
 });

@@ -5,6 +5,12 @@ const { defineProperty, get, set, inject, isEmpty, merge } = Ember; // jshint ig
 const a = Ember.A; // jshint ignore:line
 
 export default Ember.Controller.extend({
+  items: [
+    { id: 'basic', title: 'Basic' },
+    { id: 'backend', title: 'Backend' },
+    { id: 'ember-data', title: 'Ember Data' },
+  ],
+  selected: 'basic',
 
   isPrivate: false,
   requestBin: null,
@@ -30,5 +36,14 @@ export default Ember.Controller.extend({
         // window.location.href = "/" + data['name'] + "?inspect";
       }
     });
-  })
+  }),
+
+  actions: {
+    onChange(action,options) {
+      if(action === 'selected') {
+        const route = get(options, 'id');
+        this.transitionToRoute(route);
+      }
+    }
+  }
 });
