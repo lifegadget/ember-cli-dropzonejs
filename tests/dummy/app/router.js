@@ -6,9 +6,9 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('basic');
-  this.route('backend');
-  this.route('ember-data');
+  this.route('demo-basic');
+  this.route('demo-backend');
+  this.route('demo-ember-data');
 });
 
 export default Router;

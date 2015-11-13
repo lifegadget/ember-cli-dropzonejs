@@ -1,0 +1,39 @@
+<h4>Basic Usage</h4>
+<p>
+  You should refer to the <a href="http://dropzonejs.com">Dropzone.js</a> website for most of your documentation needs but there are a few things to know about this addon. First of all, since the API that Dropzone exposes has some camelCase and some all lowercase expressions this plugin will allow you to use the strict API definition or just use camelCase for everything. Your choice.
+</p>
+<p>
+  With "events" you have two options:
+</p>
+<p>
+  <ul>
+    <li><b>Listen</b> - register a callback that you want called when the event fires. This will act <i>in addition to</i> the built-in functionality.</li>
+    <li><b>Override</b> - override the default behaviour of the plugin. Be sure you know what you're doing in this case. The two cases where no default behaviour is predefined and the override pattern is expected is <b>init</b> and <b>accept</b>.</li>
+  </ul>
+</p>
+<p>
+  If you want to listen to one of the many events then simply pass in a function to: <prop><i>on</i>EventName</prop>. So for instance, if you wanted to listen to Dropzone's "addedfile" event you would pass in something like:
+</p>
+<p>
+  {{#code-block language='handlebars'}}\{{drop-zone onAddedFile=myHandler}}{{/code-block}}
+</p>
+<p>
+  If you instead wanted to override the "addedfile" functionality then just use <prop>addedfile</prop> or <prop>addedFile</prop> (for the camel flare we know you possess).
+</p>
+<br/>
+
+<h4>Example</h4>
+Below is a simple dropzone which you may click (to get a file dialog) or drag files onto. Your files won't actually go anywhere  as the <prop>url</prop> property has been left at it's default of "#". That's not to say that you should
+drop your bank account details here, just saying as far as we know it won't go anywhere (nudge nudge, wink wink).
+<row>
+  <widget>
+    {{drop-zone onAddedFile=addedFile onRemovedFile=removedFile}}
+  </widget>
+  <code class='wide'>
+    {{#code-block language='handlebars'}}\{{drop-zone onAddFile=addedFile onRemoveFile}}{{/code-block}}
+    <p>
+      Where <b>fileAdded</b> is:
+    </p>
+    {{js addedFile}}
+  </code>
+</row>

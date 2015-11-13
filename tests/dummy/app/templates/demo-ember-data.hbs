@@ -1,0 +1,20 @@
+<h4>Send Files to Ember Data</h4>
+{{#if requestUrl}}
+  {{drop-zone url=requestUrl addRemoveLinks=true}}
+{{/if}}
+<br/>
+<h1>
+  Server Bin
+  <span class="bin">
+    {{#if requestInspector}} (server located at:
+      <span class="url">
+        <a href="{{requestInspector}}">{{requestInspector}}</a>
+      </span>)
+    {{/if}}
+  </span>
+</h1>
+{{#if requestInspector}}
+  <iframe id="inspector-window" src="{{requestInspector}}" ></iframe>
+{{else}}
+  Inspector not ready yet ...
+{{/if}}

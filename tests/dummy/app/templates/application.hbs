@@ -1,5 +1,5 @@
 {{#app-page
-  repo='ember-cli-dropzone'
+  repo='ember-cli-dropzonejs'
   repoOwner='lifegadget'
   subHeading='Drag and drop files into your Ember application using Dropzone.js'
   currentPath=currentPath
@@ -17,25 +17,4 @@
       {{outlet}}
     </description>
   </row>
-{{!--
-  <h5>This is only a demo and it will not upload any files. There is no specified url.</h5>
-  {{#if requestUrl}}
-    {{drop-zone url=requestUrl addRemoveLinks=true}}
-  {{/if}}
-  <br/>
-  <h1>
-    Server Bin
-    <span class="bin">
-      {{#if requestInspector}} (server located at:
-        <span class="url">
-          <a href="{{requestInspector}}">{{requestInspector}}</a>
-        </span>)
-      {{/if}}
-    </span>
-  </h1>
-  {{#if requestInspector}}
-    <iframe id="inspector-window" src="{{requestInspector}}" ></iframe>
-  {{else}}
-    Inspector not ready yet ...
-  {{/if}} --}}
 {{/app-page}}

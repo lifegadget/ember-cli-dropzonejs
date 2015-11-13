@@ -6,17 +6,18 @@ const a = Ember.A; // jshint ignore:line
 const pascalize = thingy => thingy ? Ember.String.capitalize(Ember.String.camelize(thingy)) : thingy;
 const camelizedTranslation = name => {
   // For consistency sake, allows all parameters to be camelcase in Ember
-  const translated = [
+  const camels = [
     'dragStart', 'dragEnd', 'dragEnter', 'dragOver','dragLeave',
     'addedFile', 'removedFile', 'uploadProgress', 'maxFilesReached',
     'maxFilesExceeded','processingMultiple','sendingMultiple','successMultiple',
     'completeMultiple','canceledMultiple','totalUploadProgress','queueComplete'
   ];
-  const dictionary = translated.map(item => {
-    return {[ item.toLowerCase() ]: item};
+  const translated = {};
+  camels.forEach(item => {
+    translated[item.toLowerCase()] = item;
   });
 
-  return a(keys(dictionary)).contains(name) ? dictionary[name] : name;
+  return a(keys(translated)).contains(name) ? translated[name] : name;
 };
 
 // Configuration Objects
@@ -62,16 +63,16 @@ const multiFileEvents = [
 const specialEvents = [
   'totaluploadprogress', 'reset', 'queuecomplete'
 ];
-// All events
-const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents];
 
 export default Ember.Component.extend({
   classNames: ['dropzone'],
 
   // Default values
   url: '#', // note: this can be a function too
-  autoProcessQueue: false,
+  autoProcessQueue: true,
 
+  handlers: [],
+  files: computed.alias('dz.dropzone.files'),
   getDropzoneOptions() {
     let dropzoneOptions = {};
     // add configuration
@@ -85,6 +86,7 @@ export default Ember.Component.extend({
     // note: usually better to use the "additive" listening events rather than overriding
     // the exception to this rule is the "special events" from above which are intended to be provided
     // by the caller
+    const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents];
     a(allEvents).forEach(event => {
       const prop = this.get(event) || this.get(camelizedTranslation(event));
       if(isPresent(prop)) {
@@ -103,8 +105,9 @@ export default Ember.Component.extend({
   },
   // check for non-camelized name first but then check camelized with 'on' prefix
   getHandler(event) {
-    const dropzoneEvent = this.get('event');
-    const emberEvent = this.get(`on${pascalize(camelizedTranslation(event))}`);
+    const emberStandardName = `on${pascalize(camelizedTranslation(event))}`;
+    const dropzoneEvent = this.get(event);
+    const emberEvent = this.get(emberStandardName);
     if (typeOf(dropzoneEvent) === 'function') { return dropzoneEvent; }
     if (typeOf(emberEvent) === 'function') { return emberEvent; }
     else { return null; }
@@ -112,17 +115,24 @@ export default Ember.Component.extend({
 
   insertDropzone: on('didInsertElement', function() {
     window.Dropzone.autoDiscover = false;
-    const {allEvents} = this.getProperties('allEvents');
+    const options = this.getDropzoneOptions();
 
     run.schedule('afterRender', () => {
       // Create dropzone object
-      // let dropzone = new window.Dropzone(`#${get(this,'elementId')}`, this.getDropzoneOptions()));
-      let dropzone = this.$().dropzone(this.getDropzoneOptions());
+      delete options.init; // TODO: look into why a function was inadvertently making it in here and causing problems
+      let dropzone = this.$().dropzone(options);
       // Setup event listeners
+      const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents];
       a(allEvents).forEach(event => {
+        const handlerList = a(this.get('handlers'));
         const handler = this.getHandler(event);
-        dropzone.on(event, $.proxy(handler,this));
+        if (handler) {
+          dropzone.on(event, $.proxy(handler,this));
+          handlerList.pushObject(event);
+        }
       });
+      // Save object reference
+      this.set('dz', dropzone[0]);
     });
 
     // if ( this.files && this.files.length > 0 ) {
