@@ -121,6 +121,7 @@ export default Ember.Component.extend({
       // Create dropzone object
       delete options.init; // TODO: look into why a function was inadvertently making it in here and causing problems
       let dropzone = this.$().dropzone(options);
+      dropzone = dropzone[0].dropzone;
       // Setup event listeners
       const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents];
       a(allEvents).forEach(event => {
@@ -132,7 +133,7 @@ export default Ember.Component.extend({
         }
       });
       // Save object reference
-      this.set('dz', dropzone[0]);
+      this.set('dropzone', dropzone);
     });
 
     // if ( this.files && this.files.length > 0 ) {

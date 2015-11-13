@@ -7,6 +7,7 @@ const a = Ember.A; // jshint ignore:line
 export default Ember.Controller.extend({
   items: [
     { id: 'basic', title: 'Basic' },
+    { id: 'basic-plus', title: 'Basic++' },
     { id: 'backend', title: 'Backend' },
     { id: 'ember-data', title: 'Ember Data' },
   ],

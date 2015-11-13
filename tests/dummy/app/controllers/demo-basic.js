@@ -5,6 +5,7 @@ const { defineProperty, get, set, inject, isEmpty, merge } = Ember; // jshint ig
 const a = Ember.A; // jshint ignore:line
 
 export default Ember.Controller.extend({
+  flashMessages: inject.service(),
   items: [
     { id: 'basic', title: 'Basic' },
     { id: 'backend', title: 'Backend' },
@@ -40,13 +41,9 @@ export default Ember.Controller.extend({
   _selected: observer('selected', function() {
     this.transitionToRoute('demo-' + this.get('selected'));
   }),
-  addedFile(context) {
-    console.log(context,this);
-  },
-
-  actions: {
-    onChange(options) {
-      this.set('selected', get(options, 'added.id'));
-    }
+  addedFile(file) {
+    console.log(file,this);
+    const flashMessages = Ember.get(this, 'flashMessages');
+    flashMessages.info(`File "${file.name}" Uploaded.`);
   }
 });
