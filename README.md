@@ -1,9 +1,13 @@
 # Ember-cli-dropzonejs
+
+![ ](http://zippy.gfycat.com/FineBitterChital.gif)
+
 [![Build Status](https://travis-ci.org/FutoRicky/ember-cli-dropzonejs.svg?branch=test%2Ftarvis-ci-implementation)](https://travis-ci.org/FutoRicky/ember-cli-dropzonejs)
 
-Drag and drop file uploader addon for ember-cli using [Dropzonejs](http://www.dropzonejs.com/).
+Drag and drop file uploader addon for ember-cli using
+ [Dropzonejs](http://www.dropzonejs.com/).
 
-[DEMO](http://futoricky.github.io/ember-cli-dropzonejs/)
+[DEMO](https://ember-cli-dropzonejs.firebaseapp.com)
 
 Installation
 -------------
@@ -13,7 +17,7 @@ then
 
 `bower install dropzone`
 
-This addon will use dropzone's default css by default. If you prefer to use your own css, add this option to your `Brocfile.js`:
+This addon will use dropzone's default css by default. If you prefer to use your own css, add this option to your `ember-build.js`:
 
 ```javascript
 var app = new EmberApp({

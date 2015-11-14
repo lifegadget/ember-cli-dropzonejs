@@ -43,7 +43,8 @@
     "ember-export-application-global": "^1.0.4",
     "ember-try": "0.0.8",
     "phantomjs": "1.9.18",
-    "ui-list": "0.3.12"
+    "ui-list": "0.3.12",
+    "ui-navigator-service": "^0.1.2"
   },
   "keywords": [
     "ember-addon",

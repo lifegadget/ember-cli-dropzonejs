@@ -5,16 +5,22 @@ const { defineProperty, get, set, inject, isEmpty, merge } = Ember; // jshint ig
 const a = Ember.A; // jshint ignore:line
 
 export default Ember.Controller.extend({
+  navigator: inject.service(),
   items: [
-    { id: 'basic', title: 'Basic' },
-    { id: 'basic-plus', title: 'Basic++' },
-    { id: 'backend', title: 'Backend' },
-    { id: 'ember-data', title: 'Ember Data' },
+    { id: null, title: 'Intro' },
+    { id: 'demo-basic', title: 'Basic' },
+    { id: 'demo-basic-plus', title: 'Basic++' },
+    { id: 'demo-backend', title: 'Backend' },
+    { id: 'demo-ember-data', title: 'Ember Data' },
   ],
-  selected: 'basic',
+  selected: computed('navigator.primaryRoute', function() {
+    const route = this.get('navigator.primaryRoute');
+    return route ? route : null;
+  }),
 
   _selected: observer('selected', function() {
-    this.transitionToRoute('demo-' + this.get('selected'));
+    const selected = this.get('selected');
+    this.transitionToRoute(selected ? selected : 'application');
   }),
 
   actions: {
