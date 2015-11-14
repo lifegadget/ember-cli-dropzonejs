@@ -18,5 +18,6 @@ module.exports = function(defaults) {
   */
 
   app.import('bower_components/bootstrap/dist/css/bootstrap.css');
+
   return app.toTree();
 };

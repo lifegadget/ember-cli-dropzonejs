@@ -1,0 +1,174 @@
+<h4>Example #2: <span class="text-muted">remove files</span></h4>
+<p>
+  Another example -- building off the first -- adds a way to remove a file to the UI and also listens to that event and produces a flash message here too.
+</p>
+<row>
+  <widget>
+    {{drop-zone
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      addRemoveLinks=true
+    }}
+  </widget>
+  <code class='wide'>
+    {{#code-block language='handlebars'}}\{{drop-zone
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      addRemoveLinks=true
+}}{{/code-block}}
+    {{js addedFile}}
+    {{js removedFile}}
+  </code>
+</row>
+
+<h4>Example #3: <span class="text-muted">custom layouts</span></h4>
+<p>
+  Dropzone allows you to specify the HTML you would like generated for each option (<a href="http://www.dropzonejs.com/#layout">see documentation</a>). In order to provide a nice ember-like way to provide this functionality we allow you to use the <b>block component</b> syntax to insert whatever you like. In this example we're keeping largely to the defaults but we've changed the success check mark with the 😍 emoji (only because we've you've got a soft spot for emojis). We're sure your creativity will reward you with many more benefits.
+</p>
+<row>
+  <widget>
+    {{#drop-zone
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      addRemoveLinks=true
+      as |register|
+    }}
+      {{#preview-template register=register}}
+        <div class="dz-preview dz-file-preview">
+          <div class="dz-details">
+            <div class="dz-filename"><span data-dz-name></span></div>
+            <div class="dz-size" data-dz-size></div>
+            <img data-dz-thumbnail />
+          </div>
+          <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+          <div class="dz-success-mark">
+            <span style="font-size: 3em;">😍</span>
+          </div>
+          <div class="dz-error-mark"><span>✘</span></div>
+          <div class="dz-error-message"><span data-dz-errormessage></span></div>
+        </div>
+      {{/preview-template}}
+    {{/drop-zone}}
+  </widget>
+  <code class='wide'>
+    {{#code-block language='handlebars'}}\{{#drop-zone
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      addRemoveLinks=true
+    }}
+    \{{#preview-template register=register}}
+      &lt;div class=&quot;dz-preview dz-file-preview&quot;&gt;
+        &lt;div class=&quot;dz-details&quot;&gt;
+          &lt;div class=&quot;dz-filename&quot;&gt;&lt;span data-dz-name&gt;&lt;/span&gt;&lt;/div&gt;
+          &lt;div class=&quot;dz-size&quot; data-dz-size&gt;&lt;/div&gt;
+          &lt;img data-dz-thumbnail /&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;dz-progress&quot;&gt;&lt;span class=&quot;dz-upload&quot; data-dz-uploadprogress&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;dz-success-mark&quot;&gt;
+          &lt;span style=&quot;font-size: 3em;&quot;&gt;😍&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;dz-error-mark&quot;&gt;&lt;span&gt;✘&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;dz-error-message&quot;&gt;&lt;span data-dz-errormessage&gt;&lt;/span&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    \{{/preview-template}}
+\{{/drop-zone}} {{/code-block}}
+    <p>
+      The code is unchanged from example #2
+    </p>
+  </code>
+</row>
+
+<h4>Example #3b: <span class="text-muted">(less dramatic) custom layouts</span></h4>
+<p>
+  While the above example changes the complete template for the file preview you might want to
+  instead just focus on the "success" icon that was changed in the above example. While we're at it let's not forget that you really love PDF files more than other files so let's distinguish between the two (😍 versus 🙂).
+</p>
+<p>
+  We'll do this by attaching to the <prop>success</prop> hook which is called when the "success" state is achieved. Initially it might seem like we should "override" the behaviour (aka, use the <prop>success</prop> versus <prop>onSuccess</prop>) but don't do that unless you want to really dig into what Dropzone's base implementation is doing:
+</p>
+<row>
+  <widget>
+    {{drop-zone
+      addRemoveLinks=true
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      onSuccess=emojiSuccess
+    }}
+  </widget>
+  <code class='wide'>
+    {{#code-block language='handlebars'}}\{{drop-zone
+        addRemoveLinks=true
+        onAddedFile=addedFile
+        onRemovedFile=removedFile
+        onSuccess=emojiSuccess
+      }}{{/code-block}}
+    <p>
+      The code is unchanged from example #2 but adds the cunning <prop>emojiSuccess</prop> module:
+      {{js emojiSuccess}}
+    </p>
+  </code>
+</row>
+
+<h4>Example #4: <span class="text-muted">more custom layouts</span></h4>
+<p>
+  We've already seen that you can use "block-stle" of the <prop>drop-zone</prop> component to override templates for the file preview but that is just one of the templates you can modify. In addition the following are allowed to be defined as templates:
+</p>
+<p>
+  <ul>
+    <li><prop>default-message</prop></li>
+    <li><prop>fallback-message</prop></li>
+    <li><prop>invalid-file-type</prop></li>
+    <li><prop>file-too-big</prop></li>
+  </ul>
+</p>
+<p>
+  You will likely notice that this corresponds largely to the "dictXXX" section of the API.
+</p>
+<row>
+  <widget>
+    {{#drop-zone
+      addRemoveLinks=true
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      onSuccess=emojiSuccess
+      acceptedFiles='.pdf,.mp4,.xml,.png'
+      maxFileSize=1
+      as |register|
+    }}
+      {{#default-message register=register}}
+        <span class="fa fa-files-o"></span><br>
+        Drop Files Here to Upload
+      {{/default-message}}
+      {{#invalid-file-type register=register}}
+        Invalid File Type! We only accept mp4, pdf, and xml files
+      {{/invalid-file-type}}
+    {{/drop-zone}}
+  </widget>
+  <code class='wide'>
+    {{#code-block language='handlebars'}}\{#drop-zone
+      addRemoveLinks=true
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      onSuccess=emojiSuccess
+      acceptedFiles='.pdf,.mp4,.xml,.png'
+      as |register|
+    }}
+      \{{#default-message register=register}}
+        &lt;span class=&quot;fa fa-files-o&quot;&gt;&lt;/span&gt;&lt;br&gt;
+        Drop Files Here to Upload
+      \{{/default-message}}
+      \{{#invalid-file-type register=register}}
+        Invalid File Type! We only accept mp4, pdf, and xml files
+      \{{/invalid-file-type}}
+    \{{/drop-zone}}{{/code-block}}
+    <p>
+      The code is unchanged from example #3b.
+    </p>
+  </code>
+</row>
+<p>
+  The one thing to note here is that with the default layout, some of these templates are more useful than others because several of them are displayed as part of the "hover" effect which doesn't accept HTML.
+</p>
+
+
+<div class="preview-area"></div>

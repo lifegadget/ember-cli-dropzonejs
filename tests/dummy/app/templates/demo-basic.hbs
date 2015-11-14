@@ -27,12 +27,12 @@ Below is a simple dropzone which you may click (to get a file dialog) or drag fi
 drop your bank account details here, just saying as far as we know it won't go anywhere (nudge nudge, wink wink).
 <row>
   <widget>
-    {{drop-zone onAddedFile=addedFile onRemovedFile=removedFile}}
+    {{drop-zone onAddedFile=addedFile}}
   </widget>
   <code class='wide'>
-    {{#code-block language='handlebars'}}\{{drop-zone onAddFile=addedFile onRemoveFile}}{{/code-block}}
+    {{#code-block language='handlebars'}}\{{drop-zone onAddedFile=addedFile}}{{/code-block}}
     <p>
-      Where <b>fileAdded</b> is:
+      Where <b>addedFile</b> is:
     </p>
     {{js addedFile}}
   </code>
