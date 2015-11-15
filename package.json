@@ -1,6 +1,6 @@
 {
   "name": "ui-dropzone",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Native file drag and drop for ambitious applications",
   "directories": {
     "doc": "doc",
@@ -22,9 +22,22 @@
     "Ken Snyder <ken@ken.net>",
     "Ricardo Mercado <RicardoAMercado@gmail.com>"
   ],
+  "files": [
+    "ember-cli-build.js",
+    "LICENSE.md",
+    "README.md",
+    "addon",
+    "blueprints",
+    "app",
+    "bower.json",
+    "index.js",
+    "package.json",
+    "testem.json",
+    "vendor"
+  ],
   "license": "MIT",
   "devDependencies": {
-    "broccoli-asset-rev": "^2.1.2",
+    "broccoli-asset-rev": "^2.2.0",
     "demo-helper": "0.0.36",
     "ember-browserify": "^1.0.2",
     "ember-cli": "^1.13.12",
@@ -39,7 +52,7 @@
     "ember-cli-moment-shim": "0.7.1",
     "ember-cli-qunit": "1.0.4",
     "ember-cli-release": "0.2.8",
-    "ember-cli-sauce": "1.4.2",
+    "ember-cli-sri": "^1.1.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-data": "1.13.15",
     "ember-disable-prototype-extensions": "^1.0.0",
@@ -47,7 +60,6 @@
     "ember-export-application-global": "^1.0.4",
     "ember-moment": "4.1.0",
     "ember-try": "0.0.8",
-    "phantomjs": "1.9.18",
     "ui-list": "0.3.12",
     "ui-navigator-service": "^0.1.2"
   },
@@ -64,7 +76,7 @@
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.5",
-    "ember-cli-htmlbars": "1.0.1"
+    "ember-cli-htmlbars": "^1.0.1"
   },
   "browser": {
     "jquery": "../jquery/jquery.js",

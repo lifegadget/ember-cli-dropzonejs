@@ -16,15 +16,6 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-    },
-    contentSecurityPolicy: {
-      'default-src': "'self' http://requestb.in/* *",
-      'script-src': "'self' 'unsafe-eval' *",
-      'font-src': "'self' *",
-      'connect-src': "'self' *",
-      'img-src': "'self' *",
-      'style-src': "'self' 'unsafe-inline' *",
-      'media-src': "'self' *"
     }
   };
 
@@ -49,7 +40,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.baseURL = '/ui-dropzone';
+
   }
 
   return ENV;

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import TemplateMixinMixin from '../../../mixins/template-mixin';
+import TemplateMixinMixin from 'ui-dropzone/mixins/template-mixin';
 import { module, test } from 'qunit';
 
 module('Unit | Mixin | template mixin');

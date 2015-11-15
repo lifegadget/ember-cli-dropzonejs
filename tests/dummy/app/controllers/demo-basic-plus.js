@@ -20,7 +20,7 @@ export default Ember.Controller.extend({
     const flashMessages = Ember.get(this, 'flashMessages');
     flashMessages.warning(`File "${file.name}" Removed!`);
   },
-  emojiSuccess(file, server) {
+  emojiSuccess(file) {
     const emoji = file.type === 'application/pdf' ? "😍" : "🙂";
     let message = `<span style="font-size: 3em;">${emoji}</span>`;
     $(file.previewTemplate).find('.dz-success-mark').html(message);

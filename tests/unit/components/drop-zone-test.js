@@ -34,78 +34,34 @@ test('that is being initialized', function(assert) {
   let component = this.subject();
   this.render();
   Ember.run(() => {
-    assert.ok(component.myDropzone);
+    assert.ok(component.dropzone);
   });
 });
 
-test('that options are being assigned properly', function(assert){
+test('Camelized API-styled options are being picked up', function(assert){
   let component = this.subject();
 
-  // not tested:
-  // previewsContainer
-  // acceptedFiles
-  // forceFallback
+  component.set('dragStart', function() {});
+  component.set('dragEnd', function() {});
+  component.set('dragOver', function() {});
+  component.set('dragLeave', function() {});
 
-  let urlArr = ['#', 'http://example.com/example', '/here/inside'];
-  component.set('url', urlArr[Math.floor(Math.random() * urlArr.length)]);
+  component.set('maxFilesExceeded', function() {});
+  component.set('processingMultiple', function() {});
+  component.set('sendingMultiple', function() {});
+  component.set('successMultiple', function() {});
 
-  let methodArr = ['POST', 'GET'];
-  component.set('method', methodArr[Math.floor(Math.random() * methodArr.length)]);
+  let options = component.getDropzoneOptions();
 
-  component.set('parallelUploads', Math.floor(Math.random() * 16));
+  assert.ok(options.dragstart);
+  assert.ok(options.dragend);
+  assert.ok(options.dragover);
+  assert.ok(options.dragleave);
 
-  component.set('maxFilesize', Math.floor(Math.random() * 10000));
-
-  let filesizeBaseArr = [1000, 1024];
-  component.set('filesizeBase', filesizeBaseArr[Math.floor(Math.random() * filesizeBaseArr.length)]);
-
-  let paramNameArr = ['file', 'testing', '12345', '#*Ewefw9e77ef'];
-  component.set('paramName', paramNameArr[Math.floor(Math.random() * paramNameArr.length)]);
-
-  component.set('uploadMultiple', Boolean(Math.floor(Math.random() * 2)));
-
-  let headersArr = [undefined, {'auth': stringGenerator(20)}];
-  component.set('headers', headersArr[Math.floor(Math.random() * headersArr.length)]);
-
-  component.set('addRemoveLinks', Boolean(Math.floor(Math.random() * 2)));
-
-  component.set('clickable', Boolean(Math.floor(Math.random() * 2)));
-
-  component.set('maxThumbnailsize', Math.floor(Math.random() * 10000));
-
-  component.set('thumbnailWidth', Math.floor(Math.random() * 10000));
-
-  component.set('thumbnailHeight', Math.floor(Math.random() * 10000));
-
-  let maxFilesArr = [null, Math.floor(Math.random() * 10000)];
-  component.set('maxFiles', maxFilesArr[Math.floor(Math.random() * maxFilesArr.length)]);
-
-  component.set('autoProccessQueue', Boolean(Math.floor(Math.random() * 2)));
-
-  component.set('accept', Ember.K);
-
-  this.render();
-
-  Ember.run(() => {
-    let dropOption = component.myDropzone.options;
-    assert.equal(component.url, dropOption.url);
-    assert.equal(component.method, dropOption.method);
-    assert.equal(component.parallelUploads, dropOption.parallelUploads);
-    assert.equal(component.maxFilesize, dropOption.maxFilesize);
-    assert.equal(component.filesizeBase, dropOption.filesizeBase);
-    assert.equal(component.paramNameArr, dropOption.paramNameArr);
-    assert.equal(component.uploadMultiple, dropOption.uploadMultiple);
-    assert.equal(component.headers, dropOption.headers);
-    assert.equal(component.addRemoveLinks, dropOption.addRemoveLinks);
-    assert.equal(component.clickable, dropOption.clickable);
-    assert.equal(component.maxThumbnailsize, dropOption.maxThumbnailsize);
-    assert.equal(component.thumbnailWidth, dropOption.thumbnailWidth);
-    assert.equal(component.thumbnailHeight, dropOption.thumbnailHeight);
-    assert.equal(component.maxFiles, dropOption.maxFiles);
-    // assert.equal(component.autoProccessQueue, dropOption.autoProccessQueue);
-    assert.equal(component.accept, dropOption.accept);
-
-  });
+  assert.ok(options.maxfilesexceeded);
+  assert.ok(options.processingmultiple);
+  assert.ok(options.sendingmultiple);
+  assert.ok(options.successmultiple);
 
 });
 
@@ -126,7 +82,7 @@ test('that translations are being set', function(assert){
   this.render();
 
   Ember.run(() => {
-    let dropTranslations = component.myDropzone.options;
+    let dropTranslations = component.dropzone.options;
     assert.equal(component.dictDefaultMessage, dropTranslations.dictDefaultMessage);
     assert.equal(component.dictFallbackMessage, dropTranslations.dictFallbackMessage);
     assert.equal(component.dictFallbackText, dropTranslations.dictFallbackText);

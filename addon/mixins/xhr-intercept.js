@@ -21,11 +21,11 @@ export default Ember.Mixin.create({
         });
         options.readType = textType ? 'readAsText' : 'readAsDataURL';
       }
-      let reader = new FileReader();
-      reader.onload = e => {
+      let reader = new window.FileReader();
+      reader.onload = () => {
         resolve(reader.result);
       };
-      reader.onerror = e => {
+      reader.onerror = () => {
         reject(reader.result);
       };
 

@@ -20,11 +20,6 @@ export default Ember.Controller.extend(xhrIntercept, {
     const flashMessages = Ember.get(this, 'flashMessages');
     flashMessages.warning(`File "${file.name}" Removed!`);
   },
-  sending(file, xhr, formData) {
-    const DONE = 4;
-    // console.log(file,xhr,formData);
-    // debugger;
-  },
   complete(file) {
     console.log('completed: %o', file);
   },
