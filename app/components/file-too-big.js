@@ -1,1 +1,1 @@
-export { default } from 'ember-cli-dropzonejs/components/file-too-big';
+export { default } from 'ui-dropzone/components/file-too-big';

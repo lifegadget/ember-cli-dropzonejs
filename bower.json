@@ -1,5 +1,5 @@
 {
-  "name": "ember-cli-dropzonejs",
+  "name": "ui-dropzone",
   "dependencies": {
     "dropzone": "^4.0.1",
     "ember": "1.13.10",

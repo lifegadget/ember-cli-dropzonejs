@@ -1,45 +1,35 @@
-# Ember-cli-dropzonejs
+# ui-dropzone
 
 ![ ](http://zippy.gfycat.com/FineBitterChital.gif)
 
-[![Build Status](https://travis-ci.org/FutoRicky/ember-cli-dropzonejs.svg?branch=test%2Ftarvis-ci-implementation)](https://travis-ci.org/FutoRicky/ember-cli-dropzonejs)
+Drag and drop file uploader addon for ember-cli using [Dropzonejs](http://www.dropzonejs.com/).
 
-Drag and drop file uploader addon for ember-cli using
- [Dropzonejs](http://www.dropzonejs.com/).
+[DEMO](https://ui-dropzone.firebaseapp.com)
 
-[DEMO](https://ember-cli-dropzonejs.firebaseapp.com)
+## Installation
 
-Installation
--------------
-`ember install ember-cli-dropzonejs`
+From your project's root folder:
 
-then
+     ember install ui-dropzone
 
-`bower install dropzone`
+This will install the bower based **dropzonejs** library and you're ready to go.
 
-This addon will use dropzone's default css by default. If you prefer to use your own css, add this option to your `ember-build.js`:
+> Note: if you'd prefer to use your own css and not dropzone's you can disable it in your `ember-cli-build.js` file:
 
-```javascript
-var app = new EmberApp({
-  ---
-  emberCliDropzonejs: {
-    includeDropzoneCss: false
-  }
-  ---
-});
-```
+    var app = new EmberApp({
+      emberCliDropzone: {
+        includeDropzoneCss: false
+      }
+    });
 
+## Usage
 
-Usage
--------------
-Simply add the component to your template like so: `{{drop-zone url='/endpoint'}}`
+Just add the component to your template:
 
-You can see all properties in the [Dropzonejs configuration docs](http://www.dropzonejs.com/#configuration).
+    {{drop-zone url='http://www.server.com/endpoint'}}
 
-To set properties simply add the name of the property inside the component call and assign a value.
+For all other instruction review the interactive [demo](https://ui-dropzone.firebaseapp.com) or the [DropzoneJS documentation](http://www.dropzonejs.com/).
 
-example:
+## History
 
-`{{drop-zone url='http://example.com/example' clickable=false addRemoveLinks=true}}`
-
-**Remember to add an url, it will not work without it**
+The history of this addon starts with all the great DropzoneJS work, it then was brought to Ember by [Ricardo Mercado](https://github.com/FutoRicky). I forked this code because I needed to extend it enough that I felt it was better to have it evolve separately. 

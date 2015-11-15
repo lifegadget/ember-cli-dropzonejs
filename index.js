@@ -2,11 +2,11 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-dropzonejs',
+  name: 'ui-dropzone',
   included: function(app) {
     this._super.included(app);
 
-    var options = app.options.emberCliDropzonejs || {includeDropzoneCss: true};
+    var options = app.options.emberCliDropzone || {includeDropzoneCss: true};
 
     app.import('bower_components/dropzone/dist/dropzone.js');
 

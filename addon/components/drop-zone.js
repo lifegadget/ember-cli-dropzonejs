@@ -72,7 +72,7 @@ const templateLookup = {
   "file-too-big": 'dictFileTooBig'
 };
 
-import xhrIntercept from 'ember-cli-dropzonejs/mixins/xhr-intercept';
+import xhrIntercept from 'ui-dropzone/mixins/xhr-intercept';
 import layout from '../templates/components/drop-zone';
 
 export default Ember.Component.extend(xhrIntercept,{

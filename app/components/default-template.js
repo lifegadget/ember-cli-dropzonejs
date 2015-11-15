@@ -1,1 +1,1 @@
-export { default } from 'ember-cli-dropzonejs/components/default-template';
+export { default } from 'ui-dropzone/components/default-template';

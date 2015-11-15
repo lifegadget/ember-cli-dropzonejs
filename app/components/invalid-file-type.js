@@ -1,1 +1,1 @@
-export { default } from 'ember-cli-dropzonejs/components/invalid-file-type';
+export { default } from 'ui-dropzone/components/invalid-file-type';

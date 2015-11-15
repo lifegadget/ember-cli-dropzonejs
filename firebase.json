@@ -1,5 +1,5 @@
 {
-  "firebase": "ember-cli-dropzonejs",
+  "firebase": "ui-dropzone",
   "public": "dist",
   "ignore": [
     "firebase.json",
