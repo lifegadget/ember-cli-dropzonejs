@@ -24,8 +24,9 @@
     {{#code-block language='handlebars'}}\{{drop-zone
       onAddedFile=addedFile
       onRemovedFile=removedFile
+      addRemoveLinks=true
       keepLocal=true
-      localSuccess=success
+      acceptedFiles='text/*'
 }}{{/code-block}}
     the interesting code that forces it stay local is all in <prop>mixins/xhr-intercept</prop> if you want to understand how this is being handled.
   </code>
