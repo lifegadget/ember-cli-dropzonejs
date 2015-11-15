@@ -29,7 +29,7 @@ const configurationOptions = [
   'maxFiles', 'acceptedFiles', 'autoProcessQueue', 'forceFallback', 'previewTemplate'
 ];
 const optionalCallbacks = [
-  'init', 'accept', 'resize', 'fallback'
+  'initialise', 'accept', 'resize', 'fallback'
 ];
 // Dropzone translations
 // aka, text/html that shows up in various states
@@ -72,9 +72,10 @@ const templateLookup = {
   "file-too-big": 'dictFileTooBig'
 };
 
+import xhrIntercept from 'ember-cli-dropzonejs/mixins/xhr-intercept';
 import layout from '../templates/components/drop-zone';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(xhrIntercept,{
   layout: layout,
   classNames: ['dropzone'],
   propertyNamesBindings: ['ariaRole'],
@@ -84,21 +85,35 @@ export default Ember.Component.extend({
   url: '#', // note: this can be a function too
   autoProcessQueue: true,
 
+  // Download file to browser but keep local to browser
+  keepLocal: false,
+  _keepLocal: on('init', function() {
+    const keepLocal = this.get('keepLocal');
+    if(keepLocal) {
+      this.accept = this.localAcceptHandler;
+    }
+  }),
+
+  // Config counters
   handlers: computed(()=> { return a(); }),
   overwriteHandlers: computed(()=> { return a(); }),
   customTemplates: computed(()=> { return a(); }),
+  localPayloads: computed(()=> { return a(); }),
+
   getDropzoneOptions() {
     let dropzoneOptions = {};
+    dropzoneOptions.init = null;
     // add configuration
     a(allConfiguration).forEach(option => {
       const prop = this.get(option);
+      const namedOption = option === 'intialize' ? 'init' : option; // avoids conflict with Ember's 'init()'
       if(isPresent(prop)) {
-        dropzoneOptions[option] = prop;
+        dropzoneOptions[namedOption] = prop;
       }
     });
     // Event Overrides
     // note: usually better to use the "additive" listening events rather than overriding
-    const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents];
+    const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents, ...optionalCallbacks];
     const overwriteHandlers = this.get('overwriteHandlers');
     a(allEvents).forEach(event => {
       const prop = this.get(event) || this.get(camelizedTranslation(event));
@@ -142,7 +157,17 @@ export default Ember.Component.extend({
       });
       // Save object reference
       this.set('dropzone', dropzone);
+      if(this.keepLocal) {
+        run.next(() => {
+          this._stubSubmitRequest();
+        });
+      }
+      this.loadPreExistingFiles();
     });
+
+  }),
+  loadPreExistingFiles() {
+    // TODO: implement
 
     // if ( this.files && this.files.length > 0 ) {
     //   this.files.map( function( file ) {
@@ -170,7 +195,7 @@ export default Ember.Component.extend({
     //     self.myDropzone.files.push(file);
     //   });
     // }
-  }),
+  },
   registerTemplate(type, content) {
     // let templates = this.get('customTemplates');
     // templates[type] = content; // this may be redundant but keeping for now

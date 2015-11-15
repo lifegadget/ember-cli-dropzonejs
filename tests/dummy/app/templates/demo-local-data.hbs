@@ -1,0 +1,32 @@
+<h4>1. Uploading Files to the Browser (not sending them to the server)</h4>
+<p>
+  Up to now the "file upload" has assumed what you wanted to do was upload the file to a remote server. Not a bad <i>assumption</i> but what if instead you wanted the payload of the file to be kept locally? You see, normally, the properties you get with dropzone are meta properties like <prop>size</prop>, <prop>name</prop>, etc. What you do not get at any stage is the actual file <b>contents</b>.
+</p>
+<p>
+  Clearly an intervention is needed and we've got the intervention team standing by.
+</p>
+
+<p>
+  Notice in this example that we've set <prop>keepLocal</prop> to true indicating that no server operations are needed. This is all that is needed and now all `file` objects will have a <prop>contents</prop> property which has the content in it. If the file type was a text file then it will just be text, if not then it will be stored as base64 which in the case of an image can be directly plugged into an image tag.
+</p>
+
+<row>
+  <widget>
+    {{drop-zone
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      addRemoveLinks=true
+      keepLocal=true
+      acceptedFiles='text/*'
+    }}
+  </widget>
+  <code class='wide'>
+    {{#code-block language='handlebars'}}\{{drop-zone
+      onAddedFile=addedFile
+      onRemovedFile=removedFile
+      keepLocal=true
+      localSuccess=success
+}}{{/code-block}}
+    the interesting code that forces it stay local is all in <prop>mixins/xhr-intercept</prop> if you want to understand how this is being handled.
+  </code>
+</row>

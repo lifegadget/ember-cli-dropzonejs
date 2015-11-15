@@ -33,6 +33,7 @@
     "ember-cli-htmlbars-inline-precompile": "^0.3.1",
     "ember-cli-ic-ajax": "0.2.4",
     "ember-cli-inject-live-reload": "^1.3.1",
+    "ember-cli-moment-shim": "0.7.1",
     "ember-cli-qunit": "1.0.4",
     "ember-cli-release": "0.2.8",
     "ember-cli-sauce": "1.4.2",
@@ -41,6 +42,7 @@
     "ember-disable-prototype-extensions": "^1.0.0",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
+    "ember-moment": "4.1.0",
     "ember-try": "0.0.8",
     "phantomjs": "1.9.18",
     "ui-list": "0.3.12",
@@ -67,6 +69,6 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "demoURL": "http://futoricky.github.io/ember-cli-dropzonejs/"
+    "demoURL": "https://ember-cli-dropzonejs.firebaseapp.com"
   }
 }

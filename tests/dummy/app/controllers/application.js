@@ -7,11 +7,11 @@ const a = Ember.A; // jshint ignore:line
 export default Ember.Controller.extend({
   navigator: inject.service(),
   items: [
-    { id: null, title: 'Intro' },
-    { id: 'demo-basic', title: 'Basic' },
-    { id: 'demo-basic-plus', title: 'Basic++' },
-    { id: 'demo-backend', title: 'Backend' },
-    { id: 'demo-ember-data', title: 'Ember Data' },
+    { id: null, title: 'Intro', subHeading: 'quick overview' },
+    { id: 'demo-basic', title: 'Basic', subHeading: 'example dropzone' },
+    { id: 'demo-basic-plus', title: 'Basic++', subHeading: 'more examples' },
+    { id: 'demo-backend', title: 'Backend', subHeading: 'watch server\'s response' },
+    { id: 'demo-local-data', title: 'Local Data', subHeading: 'server-less operation' },
   ],
   selected: computed('navigator.primaryRoute', function() {
     const route = this.get('navigator.primaryRoute');

@@ -9,7 +9,7 @@ Router.map(function() {
   this.route('demo-basic');
   this.route('demo-basic-plus');
   this.route('demo-backend');
-  this.route('demo-ember-data');
+  this.route('demo-local-data');
 });
 
 export default Router;
