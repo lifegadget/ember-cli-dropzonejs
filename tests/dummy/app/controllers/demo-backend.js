@@ -42,8 +42,5 @@ export default Ember.Controller.extend({
     console.log(file,this);
     const flashMessages = Ember.get(this, 'flashMessages');
     flashMessages.info(`File "${file.name}" Uploaded.`);
-  },
-  sending(file, xhr, formData) {
-    // debugger;
   }
 });
