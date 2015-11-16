@@ -93,6 +93,9 @@ export default Ember.Component.extend(xhrIntercept,{
       this.accept = this.localAcceptHandler;
     }
   }),
+  // Switch away from built-in way of sending
+  // and use AJAX instead
+  useAjax: false,
 
   // Config counters
   handlers: computed(()=> { return a(); }),
@@ -157,9 +160,16 @@ export default Ember.Component.extend(xhrIntercept,{
       });
       // Save object reference
       this.set('dropzone', dropzone);
+      // local override
       if(this.keepLocal) {
         run.next(() => {
           this._stubSubmitRequest();
+        });
+      }
+      // ajax override
+      if(this.useAjax) {
+        run.next(() => {
+          this._ajaxSubmitRequest();
         });
       }
       this.loadPreExistingFiles();

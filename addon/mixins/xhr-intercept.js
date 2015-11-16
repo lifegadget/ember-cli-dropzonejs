@@ -9,7 +9,10 @@ const _textTypes = ['text/*', 'application/xml', 'application/x-sh', 'applicatio
 export default Ember.Mixin.create({
   /**
    * Replaces the XHR's send operation so that the stream can be
-   * retrieved on the client side instead being sent to the server
+   * retrieved on the client side instead being sent to the server.
+   * The function name is a little confusing (other than it replaces the "send"
+   * from Dropzonejs) because really what it's doing is reading the file and
+   * NOT sending to the server.
    */
   _sendIntercept(file, options={}) {
     return new RSVP.Promise((resolve,reject) => {
@@ -64,5 +67,27 @@ export default Ember.Mixin.create({
     this.dropzone.submitRequest = function(xhr, formData, files) {
       this._finished(files,'locally resolved, refer to "contents" property');
     };
-  }
+  },
+
+  /**
+   * Rather than letting Dropzone send it's own XHR request we'll take over that
+   * responsibility here to get around CORS issues when needed. This is activated by
+   * setting the components "useAjax" property to true.
+   */
+  _ajaxSubmitRequest() {
+    this.dropzone.submitRequest = $.proxy(function(xhr, formData, files) {  //jshint ignore:line
+      this._sendIntercept(files[0]).then(data => {
+        $.ajax({
+          url: this.url,
+          method: 'POST',
+          crossDomain: true,
+          data: data,
+          success: xhr.onload,
+          error: xhr.onerror
+        });
+      });
+    }, this);
+  },
+
+
 });

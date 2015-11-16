@@ -1,20 +1,37 @@
-<h5>This is only a demo and it will not upload any files. There is no specified url.</h5>
-{{#if requestUrl}}
-  {{drop-zone url=requestUrl addRemoveLinks=true}}
-{{/if}}
-<br/>
-<h1>
-  Server Bin
-  <span class="bin">
-    {{#if requestInspector}} (server located at:
-      <span class="url">
-        <a href="{{requestInspector}}">{{requestInspector}}</a>
-      </span>)
-    {{/if}}
-  </span>
-</h1>
 {{#if requestInspector}}
+  <h4>
+    Front to Back Drops
+  </h4>
+  <row>
+    <widget>
+      {{drop-zone
+        url=requestUrl
+        addRemoveLinks=true
+        useAjax=true
+      }}
+    </widget>
+    <code>
+      {{#code-block language='handlebars'}}\{{drop-zone
+          url='{{requestUrl}}'
+          addRemoveLinks=true
+          useAjax=true
+}}{{/code-block}}
+    </code>
+  </row>
+  <description>
+    <p>
+      Here we'll leverage the very handy RequestBin service to listen as our server. When you drop a file onto the dropzone it should send it to our temporary bin.
+    </p>
+    <p>
+      One nuance that we'll run into -- and this could be a real world scenario too -- is that we're submitting to a different URL than the client browser is being served from. Enter the dreaded CORS.
+    </p>
+  </description>
+
+  <br/>
+  <p>
+    Server Inspector
+  </p>
   <iframe id="inspector-window" src="{{requestInspector}}" ></iframe>
 {{else}}
-  Inspector not ready yet ...
+  <h4>Procuring a test backend ... one moment please</h4>
 {{/if}}
