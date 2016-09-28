@@ -1,6 +1,6 @@
 {
   "name": "ui-dropzone",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Native file drag and drop for ambitious applications",
   "directories": {
     "doc": "doc",
