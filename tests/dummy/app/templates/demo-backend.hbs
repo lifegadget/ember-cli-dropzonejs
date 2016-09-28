@@ -8,6 +8,7 @@
         url=requestUrl
         addRemoveLinks=true
         useAjax=true
+        onDrop=fileDropped
       }}
     </widget>
     <code>
@@ -15,6 +16,7 @@
           url='{{requestUrl}}'
           addRemoveLinks=true
           useAjax=true
+          onDrop=fileDropped
 }}{{/code-block}}
     </code>
   </row>
@@ -27,12 +29,12 @@
     </p>
     <p>
       <note>
-        Right now the AJAX request WILL go through and send the POST request (which you will see in the backend) but browser security still indicates this is a CORS issue. Will need to dig into this part later.
+        Right now the AJAX request WILL go through and send the POST request (which you will see in the backend) but browser security still indicates this is a CORS issue. I've talked to the team and they're hoping to get a CORs fix but until then you'll have to just live with the incorrect failure on the client side.
       </note>
     </p>
     <p>
       <note>
-        Also note that clicking on the circle next to the URL below will reload the iframe.
+        Programmatically I have made it so that the RequestBin iframe reloads 5 seconds after drop a file but you can manually reload by clicking on the circle next to the URL below.
       </note>
     </p>
   </description>

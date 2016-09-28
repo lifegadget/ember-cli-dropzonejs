@@ -42,5 +42,13 @@ export default Ember.Controller.extend({
     console.log(file,this);
     const flashMessages = Ember.get(this, 'flashMessages');
     flashMessages.info(`File "${file.name}" Uploaded.`);
-  }
+  },
+  fileDropped() {
+    setTimeout(() => {
+      console.log('file dropped');
+      this.set('_fileDropped', true);
+      document.getElementById('inspector-window').contentWindow.location.src(data);
+    }, 500);
+  },
+
 });

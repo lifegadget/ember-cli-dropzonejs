@@ -17,7 +17,7 @@ const camelizedTranslation = name => {
     translated[item.toLowerCase()] = item;
   });
 
-  return a(keys(translated)).contains(name) ? translated[name] : name;
+  return a(keys(translated)).includes(name) ? translated[name] : name;
 };
 
 // Configuration Objects
