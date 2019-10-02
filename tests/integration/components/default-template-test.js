@@ -1,3 +1,4 @@
+import { find } from '@ember/test-helpers';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
@@ -12,7 +13,7 @@ test('it renders', function(assert) {
 
   this.render(hbs`{{default-template}}`);
 
-  assert.equal(this.$().text().trim(), 'NO TEMPLATE FOUND, ENSURE YOUR preview TEMPLATE IS OF THE BLOCK FORM');
+  assert.equal(find('*').textContent.trim(), 'NO TEMPLATE FOUND, ENSURE YOUR preview TEMPLATE IS OF THE BLOCK FORM');
 
   // Template block usage:" + EOL +
   this.render(hbs`
@@ -21,5 +22,5 @@ test('it renders', function(assert) {
     {{/default-template}}
   `);
 
-  assert.equal(this.$().text().trim(), 'template block text');
+  assert.equal(find('*').textContent.trim(), 'template block text');
 });

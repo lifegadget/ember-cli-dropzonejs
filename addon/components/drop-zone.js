@@ -146,7 +146,7 @@ export default Ember.Component.extend(xhrIntercept,{
       const options = this.getDropzoneOptions();
       // Create dropzone object
       delete options.init; // TODO: look into why a function was inadvertently making it in here and causing problems
-      this.$().dropzone(options);
+      this.element.addEventListener(options);
       let dropzone = this.$()[0].dropzone;
       // Setup event listeners
       const allEvents = [...dragEvents, ...fileEvents, ...multiFileEvents, ...specialEvents];
